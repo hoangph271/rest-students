@@ -34,8 +34,7 @@ const isValidStudent = ({ name, age, level }) => {
     return { error: '`name` must be a string' }
   }
   if (name.length === 0) {
-    res.status(400).send('`name` must be a NOT empty string')
-    return
+    return { error: '`name` must be a NOT empty string' }
   }
   if (!(_.isInteger(age))) {
     return { error: '`age` must be an integer' }
