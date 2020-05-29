@@ -1,5 +1,6 @@
 const express = require('express')
 const bodyParser = require('express')
+const cors = require('cors')
 const _ = require('lodash')
 const { MongoClient, ObjectId, Db } = require('mongodb')
 
@@ -52,6 +53,8 @@ const isValidStudent = ({ name, age, level }) => {
 ;(async () => {
   const app = express()
   const db = await connectDb()
+
+  app.use(cors())
 
   app.get('/student', async (_, res) => {
     const students = await db.collection('students')
