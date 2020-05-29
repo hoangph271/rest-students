@@ -28,6 +28,26 @@ const connectDb = () => new Promise((resolve, reject) => {
   })
 })
 
+const isValidStudent = ({ name, age, level }) => {
+  if (typeof name !== 'string') {
+    return { error: '`name` must be a string' }
+  }
+  if (name.length === 0) {
+    res.status(400).send('`name` must be a string')
+    return
+  }
+  if (!(_.isInteger(age))) {
+    return { error: '`age` must be an integer' }
+  }
+  if (age < 0) {
+    return { error: '`age` must NOT be negative' }
+  }
+  if (typeof level !== 'string') {
+    return { error: '`level` must be a string' }
+  }
+
+  return { ok: true }
+}
 
 ;(async () => {
   const app = express()
@@ -56,26 +76,10 @@ const connectDb = () => new Promise((resolve, reject) => {
   app.post('/student', bodyParser.json(), async (req, res) => {
     const student = req.body
 
-    const { name, age, level } = student
+    const { error } = isValidStudent(student)
 
-    if (typeof name !== 'string') {
-      res.status(400).send('`name` must be a string')
-      return
-    }
-    if (name.length === 0) {
-      res.status(400).send('`name` must NOT be empty')
-      return
-    }
-    if (!(_.isInteger(age))) {
-      res.status(400).send('`age` must be an integer')
-      return
-    }
-    if (age < 0) {
-      res.status(400).send('`age` must NOT be negative')
-      return
-    }
-    if (typeof level !== 'string') {
-      res.status(400).send('`level` must be a string')
+    if (error) {
+      res.status(400).send(error)
       return
     }
 
@@ -87,26 +91,10 @@ const connectDb = () => new Promise((resolve, reject) => {
   app.put('/student/:_id', bodyParser.json(), async (req, res) => {
     const student = req.body
 
-    const { name, age, level } = student
+    const { error } = isValidStudent(student)
 
-    if (typeof name !== 'string') {
-      res.status(400).send('`name` must be a string')
-      return
-    }
-    if (name.length === 0) {
-      res.status(400).send('`name` must NOT be empty')
-      return
-    }
-    if (!(_.isInteger(age))) {
-      res.status(400).send('`age` must be an integer')
-      return
-    }
-    if (age < 0) {
-      res.status(400).send('`age` must NOT be negative')
-      return
-    }
-    if (typeof level !== 'string') {
-      res.status(400).send('`level` must be a string')
+    if (error) {
+      res.status(400).send(error)
       return
     }
 
