@@ -84,6 +84,45 @@ const connectDb = () => new Promise((resolve, reject) => {
 
     res.send({ _id: insertedId })
   })
+  app.put('/student/:_id', bodyParser.json(), async (req, res) => {
+    const student = req.body
+
+    const { name, age, level } = student
+
+    if (typeof name !== 'string') {
+      res.status(400).send('`name` must be a string')
+      return
+    }
+    if (name.length === 0) {
+      res.status(400).send('`name` must NOT be empty')
+      return
+    }
+    if (!(_.isInteger(age))) {
+      res.status(400).send('`age` must be an integer')
+      return
+    }
+    if (age < 0) {
+      res.status(400).send('`age` must NOT be negative')
+      return
+    }
+    if (typeof level !== 'string') {
+      res.status(400).send('`level` must be a string')
+      return
+    }
+
+    const _id = new ObjectId(req.params._id)
+
+    const { matchedCount, result } = await db.collection('students')
+      .updateOne({ _id }, { $set: student })
+
+    if (matchedCount === 0) {
+      res.sendStatus(404)
+    }
+
+    return result.ok
+      ? res.sendStatus(200)
+      : res.sendStatus(500)
+  })
 
   app.get('*', (_, res) => res.sendStatus(404))
 
