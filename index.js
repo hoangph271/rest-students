@@ -132,6 +132,14 @@ const isValidStudent = ({ name, age, level }) => {
 
   app.get('*', (_, res) => res.sendStatus(404))
 
+  app.use((error, _, res) => {
+    console.error(error)
+
+    res
+      .status(500)
+      .send('Something broke!')
+  })
+
   app.listen(PORT, () => {
     console.info(`Server started@${PORT}...!`)
   })
