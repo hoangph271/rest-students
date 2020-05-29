@@ -123,6 +123,21 @@ const connectDb = () => new Promise((resolve, reject) => {
       ? res.sendStatus(200)
       : res.sendStatus(500)
   })
+  app.delete('/student/:_id', async (req, res) => {
+    const _id = new ObjectId(req.params._id)
+
+    const { result, deletedCount } = await db.collection('students')
+      .deleteOne({ _id })
+
+    if (result.ok) {
+      deletedCount
+        ? res.sendStatus(200)
+        : res.sendStatus(404)
+      return
+    }
+
+    res.sendStatus(500)
+  })
 
   app.get('*', (_, res) => res.sendStatus(404))
 
